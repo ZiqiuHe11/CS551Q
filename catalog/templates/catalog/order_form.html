@@ -1,0 +1,15 @@
+{% extends 'catalog/base.html' %}
+{% block content %}
+<h2 class="mb-4">Name a Star</h2>
+<form method="post">
+  {% csrf_token %}
+  <div class="mb-3">
+    {{ form.star.label_tag }} {{ form.star }}
+  </div>
+  <div class="mb-3">
+    {{ form.name_given.label_tag }} {{ form.name_given }}
+  </div>
+  <button type="submit" class="btn btn-success">Submit</button>
+</form>
+{% endblock %}
+

@@ -1,0 +1,11 @@
+{% extends 'catalog/base.html' %}
+{% block content %}
+  <h2>Dashboard</h2>
+  <p>Total Orders: {{ orders|length }}</p>
+  <h4 class="mt-4">Orders by Constellation:</h4>
+  <ul>
+    {% for stat in stats %}
+      <li>{{ stat.star__constellation }}: {{ stat.count }}</li>
+    {% endfor %}
+  </ul>
+{% endblock %}

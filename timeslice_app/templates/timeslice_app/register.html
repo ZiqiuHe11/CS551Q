@@ -1,0 +1,17 @@
+{% extends "timeslice_app/base.html" %}
+
+{% block title %}Register{% endblock %}
+
+{% block content %}
+<h2>Register New Account</h2>
+
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Register</button>
+</form>
+
+<p>Already have an account? <a href="{% url 'login' %}">Log in here</a>.</p>
+{% endblock %}
+
+<p><a href="{% url 'home' %}">🏠 Back to Home</a></p>

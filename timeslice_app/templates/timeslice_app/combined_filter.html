@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Filter by Category and Location</title>
+</head>
+<body>
+    <h1>Filter Magic Time Fragments</h1>
+
+    <form method="get" action="{% url 'combined_filter' %}">
+        <label for="category">Category:</label>
+        <select name="category" id="category">
+            <option value="">-- All Categories --</option>
+            {% for cat in categories %}
+                <option value="{{ cat }}" {% if cat == current_category %}selected{% endif %}>{{ cat }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="location">Location:</label>
+        <select name="location" id="location">
+            <option value="">-- All Locations --</option>
+            {% for loc in locations %}
+                <option value="{{ loc }}" {% if loc == current_location %}selected{% endif %}>{{ loc }}</option>
+            {% endfor %}
+        </select>
+
+        
+        <label for="sort">Sort by:</label>
+        <select name="sort" id="sort">
+            <option value="">-- No Sorting --</option>
+            <option value="price_asc" {% if request.GET.sort == "price_asc" %}selected{% endif %}>Price ↑</option>
+            <option value="price_desc" {% if request.GET.sort == "price_desc" %}selected{% endif %}>Price ↓</option>
+            <option value="date_asc" {% if request.GET.sort == "date_asc" %}selected{% endif %}>Date ↑</option>
+            <option value="date_desc" {% if request.GET.sort == "date_desc" %}selected{% endif %}>Date ↓</option>
+        </select>
+
+        <button type="submit">Apply</button>
+    </form>
+
+    <ul>
+        {% for item in results %}
+        <li>
+            <strong><a href="{% url 'timeslice_detail' item.id %}">{{ item.title }}</a></strong><br>
+            {{ item.historical_date }} - {{ item.location }}<br>
+            {{ item.description|truncatewords:20 }}<br>
+            <em>Category: {{ item.category }}</em> |
+            <em>Price: ${{ item.price }}</em>
+        </li>
+        {% empty %}
+        <li>No time fragments found.</li>
+        {% endfor %}
+    </ul>
+
+   
+    <div class="pagination">
+        {% if results.has_previous %}
+            <a href="?{% if current_category %}category={{ current_category }}&{% endif %}
+                      {% if current_location %}location={{ current_location }}&{% endif %}
+                      {% if request.GET.sort %}sort={{ request.GET.sort }}&{% endif %}
+                      page={{ results.previous_page_number }}">Previous</a>
+        {% endif %}
+
+        <span>Page {{ results.number }} of {{ results.paginator.num_pages }}</span>
+
+        {% if results.has_next %}
+            <a href="?{% if current_category %}category={{ current_category }}&{% endif %}
+                      {% if current_location %}location={{ current_location }}&{% endif %}
+                      {% if request.GET.sort %}sort={{ request.GET.sort }}&{% endif %}
+                      page={{ results.next_page_number }}">Next</a>
+        {% endif %}
+    </div>
+
+    <a href="{% url 'search_timeslices' %}">Back to Search</a>
+</body>
+</html>

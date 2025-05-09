@@ -1,0 +1,29 @@
+{% extends 'timeslice_app/base.html' %}
+
+{% block title %}My Profile{% endblock %}
+
+{% block content %}
+<h1>Welcome, {{ user.username }}!</h1>
+
+<h2>🧾 My Orders</h2>
+<ul>
+  {% for order in orders %}
+    <li>
+      <strong>Order #{{ order.id }}</strong> — {{ order.order_date }}<br>
+      Total: ${{ order.total_price }}<br>
+      Items:
+      <ul>
+        {% for ts in order.timeslices.all %}
+          <li>{{ ts.title }} - ${{ ts.price }}</li>
+        {% endfor %}
+      </ul>
+    </li>
+  {% empty %}
+    <li>No purchase history yet.</li>
+  {% endfor %}
+</ul>
+
+<h2>📝 Profile Info</h2>
+<p>Role: {{ profile.role }}</p>
+
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends 'catalog/base.html' %}
+{% block content %}
+<h2 class="mb-4">My Orders</h2>
+
+{% if orders %}
+  <ul class="list-group">
+    {% for order in orders %}
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        <div>
+          <strong>{{ order.star.name }}</strong>
+          <span class="text-muted">as "<em>{{ order.name_given }}</em>"</span><br>
+          <small>Status: <span class="badge bg-info text-dark">{{ order.get_status_display }}</span></small>
+        </div>
+
+        <div>
+          {% if order.status == 'pending' %}
+            <a href="{% url 'pay_for_order' order.id %}" class="btn btn-sm btn-success">Pay ${{ order.price }}</a>
+          {% elif order.status == 'paid' %}
+            <span class="text-warning">Waiting for admin approval</span>
+          {% elif order.status == 'confirmed' %}
+            <span class="text-success">✅ Named</span>
+          {% endif %}
+        </div>
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p class="text-muted">You haven't ordered any stars yet.</p>
+{% endif %}
+{% endblock %}

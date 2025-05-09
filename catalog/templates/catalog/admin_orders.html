@@ -1,0 +1,41 @@
+{% extends 'catalog/base.html' %}
+{% block content %}
+<h2 class="mb-4">All Orders (Admin Panel)</h2>
+
+{% if orders %}
+  <table class="table table-striped table-bordered align-middle">
+    <thead class="table-dark">
+      <tr>
+        <th>User</th>
+        <th>Star</th>
+        <th>Name Given</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for order in orders %}
+        <tr>
+          <td>{{ order.user.username }}</td>
+          <td>{{ order.star.name }}</td>
+          <td>{{ order.name_given }}</td>
+          <td>
+            <span class="badge bg-info text-dark">{{ order.get_status_display }}</span>
+          </td>
+          <td>
+            {% if order.status == 'paid' %}
+              <a href="{% url 'confirm_order' order.id %}" class="btn btn-sm btn-success">Confirm</a>
+            {% elif order.status == 'confirmed' %}
+              <span class="text-success">✅ Confirmed</span>
+            {% else %}
+              <span class="text-muted">-</span>
+            {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% else %}
+  <p>No orders found.</p>
+{% endif %}
+{% endblock %}

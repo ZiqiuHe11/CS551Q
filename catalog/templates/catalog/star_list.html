@@ -1,0 +1,32 @@
+{% extends 'catalog/base.html' %}
+{% load catalog_extras %}
+{% block content %}
+<h2 class="mb-4">Star Catalog</h2>
+
+<div class="row row-cols-1 row-cols-md-3 g-4">
+  {% for star in stars %}
+    <div class="col">
+      <div class="card h-100 shadow">
+        <div class="card-body">
+          <h5 class="card-title">{{ star.name }}</h5>
+          <p>Constellation: {{ star.constellation }}<br>Magnitude: {{ star.magnitude }}</p>
+
+          {% with confirmed_orders|get_item:star.id as order %}
+            {% if order %}
+              <span class="badge bg-success">Named: "{{ order.name_given }}"</span>
+              <p class="text-muted mt-1"><small>by {{ order.user.username }}</small></p>
+            {% else %}
+              <span class="badge bg-secondary">Not Named</span>
+              {% if user.is_authenticated and not user.is_superuser %}
+                <a href="{% url 'create_order' %}?star_id={{ star.id }}" class="btn btn-sm btn-primary mt-2">Name this Star</a>
+              {% endif %}
+            {% endif %}
+          {% endwith %}
+
+          <a href="{% url 'star_detail' star.id %}" class="btn btn-outline-secondary btn-sm mt-2">Details</a>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+{% endblock %}

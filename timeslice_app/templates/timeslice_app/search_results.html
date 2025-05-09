@@ -1,0 +1,31 @@
+{% extends "timeslice_app/base.html" %}
+
+{% block title %}Search Results{% endblock %}
+
+{% block content %}
+<h1>Search Results</h1>
+
+<form method="get" action="{% url 'search_timeslices' %}">
+    <input type="text" name="q" value="{{ query }}" placeholder="Search for time segments...">
+    <button type="submit">Search</button>
+</form>
+
+<ul>
+{% for item in results %}
+    <li>
+        <strong>{{ item.title }}</strong><br>
+        {{ item.historical_date }} - {{ item.location }}<br>
+        {{ item.description|truncatewords:20 }}<br>
+        <em>Price: ${{ item.price }}</em>
+        <form method="post" action="{% url 'add_to_order' item.id %}">
+            {% csrf_token %}
+            <button type="submit">Buy</button>
+        </form>
+    </li>
+{% empty %}
+    <li>No relevant time segment found.</li>
+{% endfor %}
+</ul>
+{% endblock %}
+
+<p><a href="{% url 'home' %}">🏠 Back to Home</a></p>

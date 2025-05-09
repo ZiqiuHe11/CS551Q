@@ -1,0 +1,63 @@
+{% extends "timeslice_app/base.html" %}
+
+{% block title %}Elven Archives of Time ✨{% endblock %}
+
+{% block content %}
+<div class="container">
+  <h1>📜 Elven Archives of Time 📜</h1>
+
+  <form method="get" action=".">
+    <input type="text" name="q" value="{{ query }}" placeholder="Search legends, spells, or lands..." />
+
+    <label>Category:</label>
+    <select name="category">
+      <option value="">All</option>
+      {% for cat in categories %}
+      <option value="{{ cat }}" {% if cat == current_category %}selected{% endif %}>{{ cat }}</option>
+      {% endfor %}
+    </select>
+
+    <label>Location:</label>
+    <select name="location">
+      <option value="">All</option>
+      {% for loc in locations %}
+      <option value="{{ loc }}" {% if loc == current_location %}selected{% endif %}>{{ loc }}</option>
+      {% endfor %}
+    </select>
+
+    <label>Sort:</label>
+    <select name="sort">
+      <option value="">None</option>
+      <option value="price_asc" {% if request.GET.sort == "price_asc" %}selected{% endif %}>💰 Price ↑</option>
+      <option value="price_desc" {% if request.GET.sort == "price_desc" %}selected{% endif %}>💰 Price ↓</option>
+      <option value="date_asc" {% if request.GET.sort == "date_asc" %}selected{% endif %}>📅 Date ↑</option>
+      <option value="date_desc" {% if request.GET.sort == "date_desc" %}selected{% endif %}>📅 Date ↓</option>
+    </select>
+
+    <button type="submit">🔍 Search the Archives</button>
+  </form>
+
+  <ul>
+    {% for item in results %}
+    <li>
+      <a href="{% url 'timeslice_detail' item.id %}">{{ item.title }}</a><br>
+      📅 {{ item.historical_date }} | 🗺️ {{ item.location }}<br>
+      {{ item.description|truncatewords:25 }}<br>
+      🧝 <em>{{ item.category }}</em> | 💎 <strong>${{ item.price }}</strong>
+    </li>
+    {% empty %}
+    <li>✨ No time fragments found in this realm...</li>
+    {% endfor %}
+  </ul>
+
+  <div class="pagination">
+    {% if results.has_previous %}
+    <a href="?{% if query %}q={{ query }}&{% endif %}{% if current_category %}category={{ current_category }}&{% endif %}{% if current_location %}location={{ current_location }}&{% endif %}{% if request.GET.sort %}sort={{ request.GET.sort }}&{% endif %}page={{ results.previous_page_number }}">« Previous</a>
+    {% endif %}
+    <span>Page {{ results.number }} of {{ results.paginator.num_pages }}</span>
+    {% if results.has_next %}
+    <a href="?{% if query %}q={{ query }}&{% endif %}{% if current_category %}category={{ current_category }}&{% endif %}{% if current_location %}location={{ current_location }}&{% endif %}{% if request.GET.sort %}sort={{ request.GET.sort }}&{% endif %}page={{ results.next_page_number }}">Next »</a>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

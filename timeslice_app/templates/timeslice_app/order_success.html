@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Order Success</title>
+</head>
+<body>
+    <h1>Purchase successful!</h1>
+    <p>Order Number: {{ order.id }}</p>
+    <p>Total price: ${{ order.total_price }}</p>
+    <ul>
+        {% for item in order.timeslices.all %}
+            <li>{{ item.title }} - ${{ item.price }}</li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'home' %}">Continue browsing</a>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sign Up</title>
+    <style>
+        body {
+            font-family: 'EB Garamond', serif;
+            background-color: #f4f1e6;
+            padding: 40px;
+            color: #2f2a25;
+        }
+
+        .container {
+            width: 50%;
+            margin: 0 auto;
+            background-color: rgba(255, 249, 236, 0.9);
+            padding: 20px;
+            border: 2px solid #c8b88a;
+            border-radius: 12px;
+            box-shadow: 2px 2px 8px #d6c9a4;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.5em;
+            color: #3e3b24;
+        }
+
+        label, input {
+            display: block;
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: 'EB Garamond', serif;
+        }
+
+        input[type="submit"] {
+            background-color: #e3d8b5;
+            cursor: pointer;
+            border: 1px solid #bda97c;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #bda97c;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Sign Up for Magic Archives</h1>
+
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}  <!-- Form fields render here -->
+        <input type="submit" value="Sign Up">
+    </form>
+
+    <p>Already have an account? <a href="{% url 'login' %}">Log in here</a></p>
+</div>
+
+</body>
+</html>

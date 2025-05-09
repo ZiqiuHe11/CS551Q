@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Browse by Location</title>
+</head>
+<body>
+    <h1>Browse Magic Time Fragments by Location</h1>
+
+    <form method="get" action="{% url 'location_filter' %}">
+        <label for="location">Choose location:</label>
+        <select name="location" id="location" onchange="this.form.submit()">
+            <option value="">-- All --</option>
+            {% for loc in locations %}
+                <option value="{{ loc }}" {% if loc == current_location %}selected{% endif %}>{{ loc }}</option>
+            {% endfor %}
+        </select>
+    </form>
+
+    <ul>
+        {% for item in results %}
+        <li>
+            <strong>{{ item.title }}</strong><br>
+            {{ item.historical_date }} - {{ item.location }}<br>
+            {{ item.description|truncatewords:20 }}<br>
+            <em>Category: {{ item.category }}</em> |
+            <em>Price: ${{ item.price }}</em>
+        </li>
+        {% empty %}
+        <li>No time fragments found for this location.</li>
+        {% endfor %}
+    </ul>
+
+    <a href="{% url 'search_timeslices' %}">Back to Search</a>
+</body>
+</html>

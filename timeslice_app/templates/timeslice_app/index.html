@@ -1,0 +1,14 @@
+{% extends "timeslice_app/base.html" %}
+
+{% block title %}Time Slice Store{% endblock %}
+
+{% block content %}
+<h1>Welcome to the Time Fragments Store</h1>
+<ul>
+  {% for slice in slices %}
+    <li>{{ slice.title }} — {{ slice.price }} gold</li>
+  {% empty %}
+    <li>No time segment</li>
+  {% endfor %}
+</ul>
+{% endblock %}

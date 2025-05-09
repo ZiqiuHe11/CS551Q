@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ item.title }}</title>
+</head>
+<body>
+    <h1>{{ item.title }}</h1>
+
+    <p><strong>Date:</strong> {{ item.historical_date }}</p>
+    <p><strong>Location:</strong> {{ item.location }}</p>
+    <p><strong>Category:</strong> {{ item.category }}</p>
+    <p><strong>Price:</strong> ${{ item.price }}</p>
+    <p><strong>Description:</strong></p>
+    <p>{{ item.description }}</p>
+
+    {% if item.image_url %}
+        <img src="{{ item.image_url }}" alt="Image" style="max-width:400px;">
+    {% endif %}
+
+    <br><br>
+    <form method="post" action="{% url 'add_to_order' item.id %}">
+        {% csrf_token %}
+        <button type="submit">Buy This Time Fragment</button>
+    </form>
+
+    <br>
+    <a href="{% url 'combined_filter' %}">← Back to List</a>
+</body>
+</html>
+
