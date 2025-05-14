@@ -1,51 +1,57 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Admin Dashboard</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</head>
-<body>
-    <h1>Admin Dashboard</h1>
+{% extends "base.html" %}
 
-    <p><strong>Total Orders:</strong> {{ total_orders }}</p>
-    <p><strong>Total Revenue:</strong> ${{ total_revenue }}</p>
+{% block content %}
+<h1>Admin Dashboard</h1>
 
-    <h2>Orders by Category</h2>
-    <canvas id="categoryChart" width="400" height="200"></canvas>
+<p><strong>Total Orders:</strong> {{ total_orders }}</p>
+<p><strong>Total Revenue:</strong> ${{ total_revenue }}</p>
 
-    <h2>Orders by Location</h2>
-    <canvas id="locationChart" width="400" height="200"></canvas>
+<h2>Orders by Category</h2>
+<canvas id="categoryChart" width="400" height="200"></canvas>
 
-    <script>
-        const categoryLabels = {{ category_data|safe }}.map(obj => obj.category);
-        const categoryCounts = {{ category_data|safe }}.map(obj => obj.total);
+<h2>Orders by Location</h2>
+<canvas id="locationChart" width="400" height="200"></canvas>
 
-        const locationLabels = {{ location_data|safe }}.map(obj => obj.location);
-        const locationCounts = {{ location_data|safe }}.map(obj => obj.total);
+<h2>Top Ordered Stars</h2>
+<ul>
+  {% for item in top_stars %}
+    <li>{{ item.orderitem__star__name }} - {{ item.count }} orders</li>
+  {% endfor %}
+</ul>
 
-        new Chart(document.getElementById('categoryChart'), {
-            type: 'bar',
-            data: {
-                labels: categoryLabels,
-                datasets: [{
-                    label: 'Orders',
-                    data: categoryCounts,
-                    backgroundColor: 'rgba(75, 192, 192, 0.6)',
-                }]
-            }
-        });
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const categoryData = {{ category_data|safe }};
+    const categoryLabels = categoryData.map(obj => obj.category);
+    const categoryCounts = categoryData.map(obj => obj.total);
 
-        new Chart(document.getElementById('locationChart'), {
-            type: 'bar',
-            data: {
-                labels: locationLabels,
-                datasets: [{
-                    label: 'Orders',
-                    data: locationCounts,
-                    backgroundColor: 'rgba(153, 102, 255, 0.6)',
-                }]
-            }
-        });
-    </script>
-</body>
-</html>
+    const locationData = {{ location_data|safe }};
+    const locationLabels = locationData.map(obj => obj.location);
+    const locationCounts = locationData.map(obj => obj.total);
+
+    new Chart(document.getElementById('categoryChart'), {
+        type: 'bar',
+        data: {
+            labels: categoryLabels,
+            datasets: [{
+                label: 'Orders',
+                data: categoryCounts,
+                backgroundColor: 'rgba(75, 192, 192, 0.6)',
+            }]
+        }
+    });
+
+    new Chart(document.getElementById('locationChart'), {
+        type: 'bar',
+        data: {
+            labels: locationLabels,
+            datasets: [{
+                label: 'Orders',
+                data: locationCounts,
+                backgroundColor: 'rgba(153, 102, 255, 0.6)',
+            }]
+        }
+    });
+</script>
+{% endblock %}

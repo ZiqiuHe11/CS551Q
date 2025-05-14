@@ -1,17 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
-from django.db.models import Q
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.db.models import Q, Count, Sum
 from decimal import Decimal
-from .models import TimeSlice, Order
+from .models import TimeSlice, Order, UserProfile
 from django.core.paginator import Paginator
-from django.contrib.admin.views.decorators import staff_member_required
-from django.db.models import Count, Sum
-from django.contrib.auth import login, authenticate
-from .forms import RegisterForm
-from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
 from django.contrib import messages
-from .models import Order, UserProfile
+from .forms import RegisterForm
+
 
 def index(request):
     slices = TimeSlice.objects.all()
@@ -51,6 +47,7 @@ def order_success(request, order_id):
     order = get_object_or_404(Order, id=order_id, user=request.user)
     return render(request, 'timeslice_app/order_success.html', {'order': order})
 
+
 def category_filter(request):
     category = request.GET.get('category')
     if category:
@@ -65,6 +62,7 @@ def category_filter(request):
         'categories': categories
     })
 
+
 def location_filter(request):
     location = request.GET.get('location')
     if location:
@@ -78,6 +76,7 @@ def location_filter(request):
         'current_location': location,
         'locations': locations
     })
+
 
 def home(request):
     query = request.GET.get('q')
@@ -130,36 +129,10 @@ def timeslice_detail(request, timeslice_id):
     timeslice = get_object_or_404(TimeSlice, id=timeslice_id)
     return render(request, 'timeslice_app/timeslice_detail.html', {'item': timeslice})
 
-@staff_member_required
-def admin_dashboard(request):
-    
-    category_data = (
-        TimeSlice.objects
-        .filter(order__isnull=False)
-        .values('category')
-        .annotate(total=Count('id'))
-    )
 
-    
-    location_data = (
-        TimeSlice.objects
-        .filter(order__isnull=False)
-        .values('location')
-        .annotate(total=Count('id'))
-    )
-
-    
-    total_orders = Order.objects.count()
-    total_revenue = Order.objects.aggregate(total=Sum('total_price'))['total'] or 0
-
-    return render(request, 'timeslice_app/admin_dashboard.html', {
-        'category_data': category_data,
-        'location_data': location_data,
-        'total_orders': total_orders,
-        'total_revenue': total_revenue,
-    })
 def combined_filter(request):
     return redirect('home')
+
 
 def register(request):
     if request.method == "POST":
@@ -173,11 +146,34 @@ def register(request):
         form = RegisterForm()
     return render(request, 'timeslice_app/register.html', {'form': form})
 
+
 @login_required
 def user_profile(request):
     profile, _ = UserProfile.objects.get_or_create(user=request.user)
-    orders = Order.objects.filter(user=request.user).order_by('-order_date') 
+    orders = Order.objects.filter(user=request.user).order_by('-order_date')
     return render(request, 'timeslice_app/profile.html', {
         'profile': profile,
         'orders': orders
+    })
+
+
+def is_admin(user):
+    return user.is_superuser
+
+
+@user_passes_test(is_admin)
+@login_required
+def admin_dashboard(request):
+    total_orders = Order.objects.count()
+    top_items = (
+        Order.objects.values('timeslices__title')
+        .annotate(order_count=Count('timeslices'))
+        .order_by('-order_count')[:5]
+    )
+    total_revenue = Order.objects.aggregate(total=Sum('total_price'))['total'] or 0
+
+    return render(request, 'timeslice_app/admin_dashboard.html', {
+        'total_orders': total_orders,
+        'top_items': top_items,
+        'total_revenue': total_revenue
     })
