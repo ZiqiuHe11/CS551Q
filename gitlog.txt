@@ -1,0 +1,41 @@
+commit 82f915ffd3d0c7a4b050ea8432bbb65454e6ba3c
+Author: ZIQIU HE <z.he.23@abdn.ac.uk>
+Date:   Thu May 15 22:22:28 2025 +0000
+
+    Final update: add PDF and finalize project
+
+commit 78fd1fd9cde45f4a99b3eed93476438b35aa6ad3
+Author: ZIQIU HE <z.he.23@abdn.ac.uk>
+Date:   Thu May 15 22:14:42 2025 +0000
+
+    Update: Add PDF
+
+commit 249de2faf4bfa75d8dd8fef084eda843db15585f
+Author: ZIQIU HE <z.he.23@abdn.ac.uk>
+Date:   Thu May 15 21:56:32 2025 +0000
+
+    Update project with latest changes
+
+commit e134171260788023f3fbb65e869b977b2b0c6e7d
+Author: ZIQIU HE <z.he.23@abdn.ac.uk>
+Date:   Thu May 15 21:43:18 2025 +0000
+
+    Update: Add search function and error handling mechanism
+
+commit 3694acd70b9925be4734e5e1edde98e485cf4749
+Author: ZIQIU HE <z.he.23@abdn.ac.uk>
+Date:   Wed May 14 17:53:42 2025 +0000
+
+    update setting.py for cloud deployment
+
+commit becd80ad6b40f78780bf3adb9d0f284f68b42541
+Author: ZIQIU HE <z.he.23@abdn.ac.uk>
+Date:   Wed May 14 17:31:58 2025 +0000
+
+    update tests and views and dashboard of admin-user
+
+commit b72382818f42dd2cfa8a1bfb61558b6d4fdda822
+Author: ZIQIU HE <z.he.23@abdn.ac.uk>
+Date:   Fri May 9 14:45:58 2025 +0000
+
+    Initial commit
